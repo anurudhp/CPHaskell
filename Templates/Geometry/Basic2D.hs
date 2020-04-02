@@ -4,7 +4,7 @@ import Data.List (sortBy)
 -- 2D-Vectors
 -----------------------------
 
-data Vec2D t = Vec2D t t deriving (Show)
+data Vec2D t = Vec2D t t deriving (Show, Eq)
 
 instance Functor Vec2D where
   fmap f (Vec2D x y) = Vec2D (f x) (f y) 
@@ -42,15 +42,19 @@ infixl 7 |/|
 (|/|) v s = fmap (/s) v
 
 -- other operations
+norm2 :: (Num t) => Vec2D t -> t
+norm2 u = u |.| u
+
 norm :: (Floating t) => Vec2D t -> t
-norm (Vec2D x y) = sqrt $ x * x + y * y
+norm = sqrt . norm2
 
 unit :: (Floating t) => Vec2D t -> Vec2D t
 unit v = v |/| (norm v)
 
+-- project u onto v
 infixl 6 `projectOnto`
 projectOnto :: (Floating t) => Vec2D t -> Vec2D t -> Vec2D t
-projectOnto u v = let vc = unit v in (u |.| vc) |*| vc
+projectOnto u v = let i = unit v in (u |.| i) |*| i
 
 rotateCCW :: (Floating t) => t -> Vec2D t -> Vec2D t
 rotateCCW angle (Vec2D x y) = 
@@ -59,21 +63,22 @@ rotateCCW angle (Vec2D x y) =
     (cs * x - sn * y)
     (sn * x + cs * y)
 
-type RotDir t = Vec2D t -> Vec2D t -> Vec2D t -> Bool
+-- Rotation Direction Predicates
+type RotPred t = Vec2D t -> Vec2D t -> Vec2D t -> Bool
 
-isCCW :: (Ord t, Num t) => RotDir t
+isCCW :: (Ord t, Num t) => RotPred t
 isCCW u v w = ((w |-| v) |><| (v |-| u)) >= 0
 
-isCollinear :: (Eq t, Num t) => RotDir t
+isCollinear :: (Eq t, Num t) => RotPred t
 isCollinear u v w = ((w |-| v) |><| (v |-| u)) == 0
 
-isCCWStrict :: (Ord t, Num t) => RotDir t
+isCCWStrict :: (Ord t, Num t) => RotPred t
 isCCWStrict u v w = (isCCW u v w) && (not $ isCollinear u v w)
 
-isCW :: (Ord t, Num t) => RotDir t
+isCW :: (Ord t, Num t) => RotPred t
 isCW u v w = not $ isCCWStrict u v w
 
-isCWStrict :: (Ord t, Num t) => RotDir t
+isCWStrict :: (Ord t, Num t) => RotPred t
 isCWStrict u v w = not $ isCCW u v w
 
 -----------------------------
@@ -97,8 +102,7 @@ type Polygon t = [Vec2D t]
 
 convexArea :: (Floating t) => Polygon t -> t
 convexArea [] = 0
-convexArea poly = (/2) $ sum $ map (\(p,q) -> p |><| q) 
-                    $ zip poly (tail poly ++ [head poly])
+convexArea poly = (/2) $ sum $ zipWith (|><|) poly (last poly : init poly)
 
 convexHull :: (Num t, Ord t) => Polygon t -> Polygon t
 convexHull poly
@@ -108,12 +112,12 @@ convexHull poly
     points = reverse $ sortBy (\(Vec2D x _) (Vec2D x' _) -> compare x x') poly
     up = compute isCWStrict points
     dn = compute isCCWStrict points
-    compute :: (Num t, Ord t) => RotDir t -> Polygon t -> Polygon t
+    compute :: (Num t, Ord t) => RotPred t -> Polygon t -> Polygon t
     compute _ [] = []
-    compute rot (p:rest) = p : remove (compute rot rest)
+    compute rot (p:ps) = p : remove (compute rot ps)
       where
         remove [] = []
         remove [q] = [q]
-        remove xs@(q:r:rest)
-          | not $ rot r q p = remove (r:rest)
+        remove xs@(q:q':qs)
+          | not $ rot q' q p = remove (q':qs)
           | otherwise = xs
