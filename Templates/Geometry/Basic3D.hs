@@ -1,10 +1,8 @@
-{-#LANGUAGE FlexibleContexts #-}
-
 -----------------------------
 -- 3D-Vectors
 -----------------------------
 
-data Vec3D t = Vec3D t t t deriving (Show)
+data Vec3D t = Vec3D t t t deriving (Show, Eq)
 
 instance Functor Vec3D where
   fmap f (Vec3D x y z) = Vec3D (f x) (f y) (f z) 
@@ -31,9 +29,9 @@ infixl 8 |.|
 infixl 9 |><| 
 (|><|) :: (Num t) => Vec3D t -> Vec3D t -> Vec3D t
 (Vec3D x y z) |><| (Vec3D x' y' z') = Vec3D 
-                                    (y * z' - z * y')
-                                    (z * x' - x * z')
-                                    (x * y' - y * x')
+                                        (y * z' - z * y')
+                                        (z * x' - x * z')
+                                        (x * y' - y * x')
 
 -- scaling
 infixl 7 |*|
@@ -45,12 +43,16 @@ infixl 7 |/|
 (|/|) v s = fmap (/s) v
 
 -- other operations
+norm2 :: (Num t) => Vec3D t -> t
+norm2 (Vec3D x y z) = x * x + y * y + z * z
+
 norm :: (Floating t) => Vec3D t -> t
-norm (Vec3D x y z) = sqrt $ x * x + y * y + z * z
+norm = sqrt . norm2
 
 unit :: (Floating t) => Vec3D t -> Vec3D t
 unit v = v |/| (norm v)
 
+-- project u onto v
 infixl 6 `projectOnto`
 projectOnto :: (Floating t) => Vec3D t -> Vec3D t -> Vec3D t
 projectOnto u v = let vc = unit v in (u |.| vc) |*| vc
@@ -71,23 +73,25 @@ boxProduct u v w = u |.| v |><| w
 -- Line3D a v => through a, along v
 data Line3D t = Line3D (Vec3D t) (Vec3D t) deriving (Show)
 
+instance (Num t, Eq t) => Eq (Line3D t) where
+  (Line3D a v) == (Line3D a' v') =
+    v |><| v' == nullVector
+    && v |><| (a |-| a') == nullVector
+
 lineFromTwoPoints :: (Num t) => Vec3D t -> Vec3D t -> Line3D t
 lineFromTwoPoints a b = Line3D a (b |-| a)
 
-areParallel :: (Num t, Eq (Vec3D t)) => Line3D t -> Line3D t -> Bool
-areParallel (Line3D a v) (Line3D a' v') = 
-  v |><| v' == nullVector
-  && v |><| (a |-| a') /= nullVector
+areParallel :: (Num t, Eq t) => Line3D t -> Line3D t -> Bool
+areParallel (Line3D a v) (Line3D a' v') = v |><| v' == nullVector
 
-areSame :: (Num t, Eq (Vec3D t)) => Line3D t -> Line3D t -> Bool
-areSame (Line3D a v) (Line3D a' v') = 
-  v |><| v' == nullVector
-  && v |><| (a |-| a') == nullVector
+areParallelButNotSame :: (Num t, Eq t) => Line3D t -> Line3D t -> Bool
+areParallelButNotSame l l' = areParallel l l' && not (l == l')
 
-areIntersecting :: (Num t, Eq (Vec3D t)) => Line3D t -> Line3D t -> Bool
-areIntersecting l l' = not $ areSame l l' || areParallel l l'
+areIntersecting :: (Num t, Eq t) => Line3D t -> Line3D t -> Bool
+areIntersecting l@(Line3D a v) l'@(Line3D a' v') =
+  not $ areParallel l l' || boxProduct v v' (a |-| a') == 0
 
-intersection :: (Floating t, Eq (Vec3D t)) => Line3D t -> Line3D t -> Maybe (Vec3D t)
+intersection :: (Floating t, Eq t) => Line3D t -> Line3D t -> Maybe (Vec3D t)
 intersection l@(Line3D a v) l'@(Line3D a' v')
   | areIntersecting l l' = Just $ a |+| k |*| v
   | otherwise = Nothing
@@ -95,9 +99,8 @@ intersection l@(Line3D a v) l'@(Line3D a' v')
       p = v |><| v'
       k = (boxProduct p (a |-| a') v') / (p |.| p)
 
-areSkew :: (Num t, Eq (Vec3D t)) => Line3D t -> Line3D t -> Bool
-areSkew l l' = not . or 
-                $ [areParallel l l', areSame l l', areIntersecting l l']
+areSkew :: (Num t, Eq t) => Line3D t -> Line3D t -> Bool
+areSkew l l' = not $ areParallel l l' || areIntersecting l l'
 
 ---------------------------
 -- Planes
@@ -113,8 +116,7 @@ planeFromLines (Line3D a v) (Line3D a' v') = Plane3D a (v |><| (a |-| a'))
 
 distFromPlane :: (Floating t) => Plane3D t -> Vec3D t -> t
 distFromPlane (Plane3D a n) p = 
-  (norm $ p `projectOnto` n)
-  - (norm $ a `projectOnto` n)
+  (norm $ p `projectOnto` n) - (norm $ a `projectOnto` n)
 
 projectPointOntoPlane :: (Floating t) => Plane3D t -> Vec3D t -> Vec3D t
 projectPointOntoPlane (Plane3D a n) p = 
