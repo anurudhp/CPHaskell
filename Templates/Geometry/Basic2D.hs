@@ -10,7 +10,7 @@ instance Functor Vec2D where
   fmap f (Vec2D x y) = Vec2D (f x) (f y) 
 
 nullVector :: (Num t) => Vec2D t
-nullVector = let ze = fromInteger 0 in Vec2D ze ze
+nullVector = Vec2D 0 0
 
 -- vector addition
 infixl 6 |+|
@@ -35,7 +35,7 @@ infixl 9 |><|
 -- scaling
 infixl 7 |*|
 (|*|) :: (Num t) => t -> Vec2D t -> Vec2D t
-(|*|) s v = fmap (*s) v
+(|*|) s = fmap (*s)
 
 infixl 7 |/|
 (|/|) :: (Floating t) => Vec2D t -> t -> Vec2D t
@@ -49,7 +49,7 @@ norm :: (Floating t) => Vec2D t -> t
 norm = sqrt . norm2
 
 unit :: (Floating t) => Vec2D t -> Vec2D t
-unit v = v |/| (norm v)
+unit v = v |/| norm v
 
 -- project u onto v
 infixl 6 `projectOnto`
@@ -73,7 +73,7 @@ isCollinear :: (Eq t, Num t) => RotPred t
 isCollinear u v w = ((w |-| v) |><| (v |-| u)) == 0
 
 isCCWStrict :: (Ord t, Num t) => RotPred t
-isCCWStrict u v w = (isCCW u v w) && (not $ isCollinear u v w)
+isCCWStrict u v w = isCCW u v w && not (isCollinear u v w)
 
 isCW :: (Ord t, Num t) => RotPred t
 isCW u v w = not $ isCCWStrict u v w
@@ -92,7 +92,7 @@ lineFromTwoPoints :: (Num t) => Vec2D t -> Vec2D t -> Line2D t
 lineFromTwoPoints a b = Line2D a (b |-| a)
 
 dropPerpendicular :: (Floating t) => Vec2D t -> Line2D t -> Line2D t
-dropPerpendicular p (Line2D _ v) = Line2D p (p |+| (rotateCCW (pi/2) v))
+dropPerpendicular p (Line2D _ v) = Line2D p (p |+| rotateCCW (pi/2) v)
 
 -----------------------------
 -- Polygons
@@ -109,7 +109,7 @@ convexHull poly
   | length poly <= 3 = poly
   | otherwise = init dn ++ tail up
   where
-    points = reverse $ sortBy (\(Vec2D x _) (Vec2D x' _) -> compare x x') poly
+    points = sortBy (\(Vec2D x _) (Vec2D x' _) -> compare x' x) poly
     up = compute isCWStrict points
     dn = compute isCCWStrict points
     compute :: (Num t, Ord t) => RotPred t -> Polygon t -> Polygon t
