@@ -1,5 +1,31 @@
+# haskell
+dist
+dist-*
+cabal-dev
 *.o
 *.hi
-build/
+*.hie
+*.chi
+*.chs.h
+*.dyn_o
+*.dyn_hi
+.hpc
+.hsenv
+.cabal-sandbox/
+cabal.sandbox.config
+*.prof
+*.aux
+*.hp
+*.eventlog
+.stack-work/
+cabal.project.local
+cabal.project.local~
+.HTF/
+.ghc.environment.*
+
+# CP
 *.in
 *.out
+
+# misc
+build/
