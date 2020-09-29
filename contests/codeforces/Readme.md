@@ -1,5 +1,5 @@
 # [Codeforces](https://codeforces.com/) contests
 
-- [Educational Round 84](1327/)
-- [Round #629 (Div. 3)](1328/)
-- [Round 674 (Div. 3)](1426/)
+- [1327: Educational Round 84](1327/)
+- [1328: Round #629 (Div. 3)](1328/)
+- [1426: Round 674 (Div. 3)](1426/)
