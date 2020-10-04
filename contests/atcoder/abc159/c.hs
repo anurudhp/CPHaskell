@@ -1,13 +1,10 @@
--- AC https://atcoder.jp/contests/abc159/submissions/11116857
+-- AC https://atcoder.jp/contests/abc159/submissions/17192890
 
-import Control.Arrow
-import Numeric
+import Control.Arrow ((>>>))
+import Numeric (showFFloat)
 
-main =
-  interact $
-    read
-      >>> solve
-      >>> (\x -> showFFloat (Just 10) x "")
+showDouble :: RealFloat a => a -> String
+showDouble x = showFFloat (Just 10) x ""
 
-solve :: Double -> Double
-solve l = (l / 3) ^ 3
+main :: IO ()
+main = interact $ read >>> ((^ 3) . (/ 3)) >>> showDouble

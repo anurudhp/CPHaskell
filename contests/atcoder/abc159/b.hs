@@ -1,21 +1,22 @@
--- AC https://atcoder.jp/contests/abc159/submissions/11106529
+-- AC https://atcoder.jp/contests/abc159/submissions/17192623
 
-import Control.Arrow
+import Control.Arrow ((>>>))
 
+main :: IO ()
 main =
   interact $
-    lines >>> head >>> solve
+    lines
+      >>> head
+      >>> solve
+      >>> ( \b ->
+              if b
+                then "Yes"
+                else "No"
+          )
 
-solve :: String -> String
-solve s
-  | let len = length s
-     in and
-          [ isPalin s,
-            isPalin $ take (div len 2) s,
-            isPalin $ drop (1 + (div len 2)) s
-          ] =
-    "Yes"
-  | otherwise = "No"
-
-isPalin :: String -> Bool
-isPalin s = s == reverse s
+solve :: String -> Bool
+solve s =
+  and $
+    (\s -> s == reverse s) <$> ([id, take half, drop (1 + half)] <*> pure s)
+  where
+    half = length s `div` 2
