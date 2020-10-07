@@ -1,17 +1,21 @@
 module Main where
 
-import System.IO (hFlush, stdout)
+import System.Environment (getArgs)
 import qualified Week5
 import qualified Week6
 import qualified Week7
+import qualified Week8
 
 main :: IO ()
 main = do
-  putStr "Assignment to test (week-no): "
-  hFlush stdout
-  n <- (read :: String -> Int) <$> getLine
-  case n of
-    5 -> Week5.main
-    6 -> Week6.main
-    7 -> Week7.main
-    _ -> putStrLn "No such assignment found"
+  args <- getArgs
+  if null args
+    then putStrLn "Usage: run <assignment-id> [args...]"
+    else
+      let (n : args') = args
+       in case n of
+            "5" -> Week5.main args'
+            "6" -> Week6.main args'
+            "7" -> Week7.main args'
+            "8" -> Week8.main args'
+            _ -> putStrLn "No such assignment found"

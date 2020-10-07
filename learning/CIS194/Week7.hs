@@ -85,5 +85,5 @@ labelTree t = runSupply nats (go t)
     go (Leaf _) = S (\s -> case s of (Cons x s') -> (Leaf x, s'))
 
 -- Testing Harness --
-main :: IO ()
-main = return ()
+main :: [String] -> IO ()
+main _ = return ()

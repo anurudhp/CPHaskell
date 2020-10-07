@@ -23,6 +23,7 @@ executable CIS194
     Week5
     Week6
     Week7
+    Week8
   -- other-extensions:
   build-depends:       base >=4.12 && <4.13
   -- hs-source-dirs:

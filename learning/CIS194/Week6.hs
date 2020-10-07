@@ -2,8 +2,8 @@
 
 module Week6 where
 
-main :: IO ()
-main = return ()
+main :: [String] -> IO ()
+main _ = return ()
 
 -- main = exercise4
 

@@ -62,8 +62,8 @@ wordCount s =
             )
 
 -- Testing Harness --
-main :: IO ()
-main = interact $ return (formatTests testResults)
+main :: [String] -> IO ()
+main _ = interact $ const (formatTests testResults)
 
 testResults :: [(String, [Bool])]
 testResults =
