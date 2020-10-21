@@ -9,12 +9,10 @@ Language Extensions
 ===================
 [List](https://downloads.haskell.org/ghc/latest/docs/html/users_guide/glasgow_exts.html)
 
-Used
-----
+### Used
 1. `Safe`
 
-Experimental
-------------
+### Experimental
 1. `ViewPatterns`
 2. `ParallelListComp`
 
