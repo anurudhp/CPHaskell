@@ -14,9 +14,9 @@ main =
 
 process :: [[Integer]] -> [Integer]
 process [] = []
-process ([_] : xs : ys : rest) = solve xs ys : process rest
+process ([_] : xs : xs' : xss) = solve xs xs' : process xss
 
 solve :: [Integer] -> [Integer] -> Integer
 solve xs ys = sum $ zipWith max (reduce xs) (reduce ys)
   where
-    reduce xs = subtract (minimum xs) <$> xs
+    reduce zs = subtract (minimum zs) <$> zs

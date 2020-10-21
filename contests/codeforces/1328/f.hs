@@ -1,38 +1,51 @@
--- AC https://codeforces.com/contest/1328/submission/74774748
+{-# LANGUAGE Safe #-}
 
-import Control.Arrow
-import Data.List
+import safe Control.Arrow ((>>>))
+import safe Data.List (group, sort)
 
-main = interact $ 
-  lines >>> map (words >>> map read) >>> solve >>> show >>> (++"\n")
+main :: IO ()
+main =
+  interact $
+    lines >>> map (words >>> map read) >>> solve >>> show >>> (++ "\n")
 
 solve :: [[Integer]] -> Integer
-solve [[n,k], a]
-  | foldl1 max (map snd groups) >= k = 0
-  | otherwise = foldl1 min $ map (get k) [lt, rt, comb]
+solve [[n, k], a]
+  | maximum (map snd groups) >= k = 0
+  | otherwise = minimum $ map (get k) [lt, rt, comb]
   where
-    groups = getgroups a
+    groups = getGroups a
     lt = compute groups
-    rt = reverse $ compute $ reverse groups
-    comb = map(\(_, c) -> (n, c)) $ merge lt rt
+    rt = reverse . compute . reverse $ groups
+    comb = zip (repeat n) $ zipWith (+) (map snd lt) (map snd rt)
 
-merge a b = map (\((l, c), (l', c')) -> (l + l', c + c')) 
-             $ zip a b
+type PII = (Integer, Integer)
 
-getgroups a = map (\u -> (head u, fromIntegral $ length u)) 
-               $ group $ sort a
+-- merge :: [PII] -> [PII] -> [PII]
+-- merge = zipWith cadd
+--   where
+--     cadd (l, c) (l', c') = (l + l', c + c')
 
-inf = 1000000000000000000 :: Integer
-get k xs = foldl min inf
-            $ map (\(l, c) -> c - l + k)
-              $ filter (\(l, _) -> l >= k) xs
+getGroups :: [Integer] -> [PII]
+getGroups =
+  map (\u -> (head u, fromIntegral $ length u))
+    . group
+    . sort
+
+inf :: Integer
+inf = 10 ^ 18
+
+get :: Integer -> [(Integer, Integer)] -> Integer
+get k =
+  foldl min inf
+    . map ((+ k) . uncurry (flip (-)))
+    . filter ((>= k) . fst)
 
 --         [(value,   length)]  -> [(length,  cost)]
 compute :: [(Integer, Integer)] -> [(Integer, Integer)]
 compute [] = []
-compute [(v, l)] = [(l, 0)]
-compute (a:b:rest) = (len, cost) : res
+compute [(_, l)] = [(l, 0)]
+compute (x : x' : xs) = (len, cost) : res
   where
-    res = compute (b:rest)
-    len = snd a + fst (head res)
-    cost = snd (head res) + (fst (head res)) * abs (fst a - fst b)
+    res = compute (x' : xs)
+    len = snd x + fst (head res)
+    cost = snd (head res) + fst (head res) * abs (fst x - fst x')

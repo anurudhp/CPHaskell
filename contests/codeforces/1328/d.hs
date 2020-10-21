@@ -1,46 +1,45 @@
--- AC https://codeforces.com/contest/1328/submission/74464903
+{-# LANGUAGE Safe #-}
 
-import Control.Arrow
+import safe Control.Arrow ((>>>))
+import safe Data.Bool (bool)
+import safe Data.Maybe (fromMaybe)
 
-main = interact $ 
-  lines >>> drop 1 >>> map (words >>> map read) 
-  >>> process 
-  >>> map (map show >>> unwords) >>> unlines
+main :: IO ()
+main =
+  interact $
+    lines
+      >>> drop 1
+      >>> map (words >>> map read)
+      >>> process
+      >>> map (map show >>> unwords)
+      >>> unlines
 
-process :: [[Integer]] -> [[Integer]]
+process :: [[Int]] -> [[Int]]
 process [] = []
-process ([n]:a:rest) = solve n a ++ process rest 
+process ([n] : a : rest) = solve n a ++ process rest
 
-solve :: Integer -> [Integer] -> [[Integer]]
-solve n a = [[foldl1 max fin], fin]
+solve :: Int -> [Int] -> [[Int]]
+solve n a = [[maximum fin], fin]
   where
-    nn = fromIntegral n
     fin
-      | a == (take nn $ repeat (head a)) = take nn $ repeat 1
-      | head cols == head (reverse cols)
-          && head a /= head (reverse a) = 
-            case newcols of Nothing -> 3 : tail cols
-                            (Just a) -> a
+      | all (== head a) a = replicate n 1
+      | head cols == last cols && head a /= last a =
+        fromMaybe (3 : tail cols) (update cols)
       | otherwise = cols
-          where newcols = update cols
 
     cols = colour 1 a
-    
-    update :: [Integer] -> Maybe [Integer]
+
+    update :: [Int] -> Maybe [Int]
     update [] = Nothing
     update [_] = Nothing
-    update (x:y:rest)
-      | x == y = Just (x : map (pick True) (y : rest))
-      | otherwise = case rec of (Just a) -> Just (x : a)
-                                Nothing -> Nothing 
-        where rec = update (y : rest) 
-    
-    colour :: Integer -> [Integer] -> [Integer]
-    colour _ [] = []
-    colour cur [x] = [cur]
-    colour cur (x:y:rest) = cur : colour (pick (x /= y) cur) (y : rest)
+    update (x : xs)
+      | x == head xs = Just (x : map (pick True) xs)
+      | otherwise = (x :) <$> update xs
 
-    pick :: Bool -> Integer -> Integer
-    pick fl x
-      | fl = 3 - x
-      | otherwise = x
+    colour :: Int -> [Int] -> [Int]
+    colour _ [] = []
+    colour cur [_] = [cur]
+    colour cur (x : x' : xs) = cur : colour (pick (x /= x') cur) (x' : xs)
+
+    pick :: Bool -> Int -> Int
+    pick fl x = bool x (3 - x) fl
