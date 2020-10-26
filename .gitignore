@@ -28,6 +28,5 @@ cabal.project.local~
 *.out
 
 # misc
-build/
-temp/
+.tmp/
 .vscode
