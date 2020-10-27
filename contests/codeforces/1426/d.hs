@@ -18,7 +18,7 @@ main =
 type SetInt = Set.Set Integer
 
 solve :: [Integer] -> Integer
-solve a = compute (Set.singleton 0) 0 a
+solve = compute (Set.singleton 0) 0
 
 compute :: SetInt -> Integer -> [Integer] -> Integer
 compute _ _ [] = 0

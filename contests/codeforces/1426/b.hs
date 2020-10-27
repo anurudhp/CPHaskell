@@ -1,6 +1,7 @@
 -- AC https://codeforces.com/contest/1426/submission/94136150
 
 import Control.Arrow ((>>>))
+import Data.Bool
 
 main :: IO ()
 main =
@@ -8,14 +9,16 @@ main =
     lines >>> drop 1
       >>> map (words >>> map read)
       >>> process
-      >>> map (\x -> if x then "YES" else "NO")
+      >>> map (bool "NO" "YES")
       >>> unlines
 
 process :: [[Int]] -> [Bool]
 process [] = []
-process ([n, m] : rest) =
-  (if m `mod` 2 == 0 then solve (take (n * 2) rest) else False) : process (drop (n * 2) rest)
+process ([n, m] : xss) =
+  (even m && solve xs) : process xss'
+  where
+    (xs, xss') = splitAt (n * 2) xss
 
 solve :: [[Int]] -> Bool
 solve [] = False
-solve ([_, a] : [b, _] : rest) = or [a == b, solve rest]
+solve ([_, x] : [x', _] : xs) = x == x' || solve xs
