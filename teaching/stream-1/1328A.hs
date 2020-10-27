@@ -12,3 +12,4 @@ solve :: [Int] -> Int
 solve [a, b]
   | a `mod` b == 0 = 0
   | otherwise = b - (a `mod` b)
+

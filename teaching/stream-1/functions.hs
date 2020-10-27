@@ -10,3 +10,4 @@ process (n:xs) = solve ys : process xs'
   where
     n' = read n -- n
     (ys, xs') = splitAt n xs
+
