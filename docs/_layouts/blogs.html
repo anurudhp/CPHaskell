@@ -21,10 +21,6 @@
 
           <h1 id="project_title">{{ site.title | default: site.github.repository_name }}</h1>
           <!-- <h2 id="project_tagline">{{ site.description | default: site.github.project_tagline }}</h2> -->
-          <div style="display: flex; justify-content: space-between;">
-            <a href="{{ site.url }}/{{ site.github.repository_name }}" target="_blank"><h2>Blogs Home</h2></a>
-            <a href="{{ site.github.repository_url }}/blob/master/blogs{{ page.url | remove: ".html" }}.lhs" target="_blank"><h2>Blog Source</h2></a>
-          </div>
         </header>
     </div>
 
@@ -34,7 +30,6 @@
         {{ content }}
 
 
-        {% if page.disqus %}
           <!-- Disqus comments -->
           <div id="disqus_thread" style="margin-top:5em;"></div>
 
@@ -56,7 +51,6 @@
           })();
           </script>
           <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-        {% endif %}
       </section>
     </div>
 
@@ -67,7 +61,15 @@
         <p class="copyright">{{ site.title | default: site.github.repository_name }} maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a></p>
         {% endif %}
         -->
-        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+        <p style="text-align: center">
+          <a href="{{ site.github.repository_url }}/blob/master/blogs{{ page.url | remove: ".html" }}.lhs" target="_blank">
+            literate haskell source
+          </a>
+          <b>|<b>
+          <a href="{{ site.url }}/{{ site.github.repository_name }}" target="_blank">All Blogs</a>
+          <b>|<b>
+          Published with <a href="https://pages.github.com">GitHub Pages</a>
+        </p>
       </footer>
     </div>
 
