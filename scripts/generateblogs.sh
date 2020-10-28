@@ -7,7 +7,8 @@ blogs=`ls blogs/*.lhs`
 for blog in $blogs ; do
   output=docs/`basename -s .lhs $blog`.md
   cp blogs/header.md $output
-  pandoc --from markdown+lhs --to gfm $blog >> $output
+  pandoc --from markdown+lhs --to gfm $blog \
+    | sed "s/sourceCode literate haskell/haskell/g" >> $output
   cat blogs/footer.md >> $output
 done
 
