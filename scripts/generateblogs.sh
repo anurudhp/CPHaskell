@@ -17,6 +17,7 @@ for blog in $blogs ; do
 
   # append YAML metadata (which is dropped by pandoc)
   runhaskell scripts/getYAMLMetadata.hs $blogs >> $output
+  echo "" >> $output
 
   # convert
   pandoc --from markdown+lhs --to $output_md_format $blog \
