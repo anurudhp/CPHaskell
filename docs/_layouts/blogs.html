@@ -21,11 +21,9 @@
 
           <h1 id="project_title">{{ site.title | default: site.github.repository_name }}</h1>
           <!-- <h2 id="project_tagline">{{ site.description | default: site.github.project_tagline }}</h2> -->
-          <div style="text-align: left;">
-            <a href="{{ site.url }}/{{ site.github.repository_name }}"><h2>Blogs Home</h2></a>
-          </div>
-          <div style="text-align: right;">
-            <a href="{{ site.github.repository_url }}/blob/master/blogs{{ page.url | remove: ".html" }}.lhs"><h2>Blog Source</h2></a>
+          <div style="display: flex; justify-content: space-between;">
+            <a href="{{ site.url }}/{{ site.github.repository_name }}" target="_blank"><h2>Blogs Home</h2></a>
+            <a href="{{ site.github.repository_url }}/blob/master/blogs{{ page.url | remove: ".html" }}.lhs" target="_blank"><h2>Blog Source</h2></a>
           </div>
         </header>
     </div>
@@ -35,9 +33,10 @@
       <section id="main_content" class="inner">
         {{ content }}
 
+
         {% if page.disqus %}
           <!-- Disqus comments -->
-          <div id="disqus_thread"></div>
+          <div id="disqus_thread" style="margin-top:5em;"></div>
 
           <script>
 
