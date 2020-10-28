@@ -1,4 +1,7 @@
 
+---
+title : test
+---
 # Introduction and our first problem
 
 ``` haskell
