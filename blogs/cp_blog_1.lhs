@@ -1,7 +1,7 @@
 ---
 title : Introduction and out first problem
 created : 30/10/2020
-layout : blog
+layout : blogs
 index : 1
 ---
 
