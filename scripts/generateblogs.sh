@@ -12,6 +12,9 @@ for blog in $blogs ; do
   # log
   echo -n "Compiling $blog to $output... "
 
+  # create empty file
+  echo "" > $output
+
   # append YAML metadata (which is dropped by pandoc)
   runhaskell scripts/getYAMLMetadata.hs $blogs >> $output
 
