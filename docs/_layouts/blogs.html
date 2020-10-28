@@ -16,12 +16,17 @@
     <div id="header_wrap" class="outer">
         <header class="inner">
           {% if site.github.is_project_page %}
-            <a id="forkme_banner" href="{{ site.github.repository_url }}">View on GitHub</a>
+            <a id="forkme_banner" href="{{ site.github.repository_url }}">Repository</a>
           {% endif %}
 
           <h1 id="project_title">{{ site.title | default: site.github.repository_name }}</h1>
           <!-- <h2 id="project_tagline">{{ site.description | default: site.github.project_tagline }}</h2> -->
-
+          <div style="text-align: left;">
+            <a href="{{ site.url }}/{{ site.github.repository_name }}"><h2>Blogs Home</h2></a>
+          </div>
+          <div style="text-align: right;">
+            <a href="{{ site.github.repository_url }}/blob/master/blogs{{ page.url | remove: ".html" }}.lhs"><h2>Blog Source</h2></a>
+          </div>
         </header>
     </div>
 
@@ -30,27 +35,29 @@
       <section id="main_content" class="inner">
         {{ content }}
 
-        <!-- Disqus comments -->
-        <div id="disqus_thread"></div>
-        
-        <script>
+        {% if ! page.no_disqus %}
+          <!-- Disqus comments -->
+          <div id="disqus_thread"></div>
 
-        /**
-        *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-        *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
-        var disqus_config = function () {
-          this.page.url = "{{ site.url }}/{{ site.github.repository_name }}{{ page.url }}";  // Replace PAGE_URL with your page's canonical URL variable
-          this.page.identifier = "haskell_cp_blog_" + "{{ page.url }}"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-        };
+          <script>
 
-        (function() { // DON'T EDIT BELOW THIS LINE
-        var d = document, s = d.createElement('script');
-        s.src = 'https://codelegend-cpblog.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-        })();
-        </script>
-        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+          /**
+          *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+          *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+          var disqus_config = function () {
+            this.page.url = "{{ site.url }}/{{ site.github.repository_name }}{{ page.url }}";  // Replace PAGE_URL with your page's canonical URL variable
+            this.page.identifier = "haskell_cp_blog_" + "{{ page.url }}"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+          };
+
+          (function() { // DON'T EDIT BELOW THIS LINE
+          var d = document, s = d.createElement('script');
+          s.src = 'https://codelegend-cpblog.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+          })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        {% endif %}
       </section>
     </div>
 
@@ -62,7 +69,6 @@
         {% endif %}
         -->
         <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
-        <p>URL: {{ site.url }} + {{ page.url }}</p>
       </footer>
     </div>
 
