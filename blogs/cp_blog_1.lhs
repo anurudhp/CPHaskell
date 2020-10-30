@@ -35,7 +35,7 @@ Let us solve an easy problem to get started.
 
 This is the **B** problem from an AtCoder beginner contest. 
 
-You have $n$ gems, with values $V_i$ and cost $C_i$. You want to pick some such that total value minus total cost is maximized. So you basically pick the ones which have $V_i > C_i$.
+You have $$n$$ gems, with values $$V_i$$ and cost $$C_i$$. You want to pick some such that total value minus total cost is maximized. So you basically pick the ones which have $$V_i > C_i$$.
 
 Let us parse the input.
 
