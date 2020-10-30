@@ -20,7 +20,7 @@ for the basic template we'll be using.
 import Control.Arrow -- for >>>
 ```
 
-``` {.haskell}
+``` haskell
 main :: IO ()
 main = interact $ _ 
 ```
@@ -74,7 +74,7 @@ solve1 [vs, cs] = sum contribs
 Let us try to simplify this, by rewriting a `zip` followed by a `map`
 using a `zipWith`
 
-``` {.haskell}
+``` haskell
 -- f :: (a, b) -> c
 -- f' :: a -> b -> c -- curried version of f 
 map f (zip xs ys) = zipWith f' xs ys

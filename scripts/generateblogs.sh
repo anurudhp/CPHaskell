@@ -25,6 +25,7 @@ for blog in $blogs ; do
   # fix code tags
   sed -i "s/sourceCode literate haskell/haskell/g" $output
   sed -i 's#{.sourceCode .literate .haskell}#haskell#g' $output
+  sed -i 's#{.haskell}#haskell#g' $output
   
   # log
   echo "done."
