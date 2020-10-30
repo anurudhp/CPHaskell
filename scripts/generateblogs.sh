@@ -3,7 +3,7 @@
 # Generate blogs in `blogs/` to `docs/`
 # `docs/` is rendered by GH-pages
 
-output_md_format=gfm
+output_md_format=markdown
 blogs=`ls blogs/*.lhs`
 
 for blog in $blogs ; do
@@ -20,8 +20,11 @@ for blog in $blogs ; do
   echo "" >> $output
 
   # convert
-  pandoc --from markdown+lhs --to $output_md_format $blog \
-    | sed "s/sourceCode literate haskell/haskell/g" >> $output
+  pandoc --from markdown+lhs --to $output_md_format $blog >> $output
+
+  # fix code tags
+  sed -i "s/sourceCode literate haskell/haskell/g" $output
+  sed -i 's#{.sourceCode .literate .haskell}#haskell#g' $output
   
   # log
   echo "done."
