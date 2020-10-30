@@ -7,14 +7,7 @@
     <meta name="viewport" content="width=device-width,maximum-scale=2">
     <link rel="stylesheet" type="text/css" media="screen" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
     
-    <!-- Load jQuery -->
-    <!-- <script src="//code.jquery.com/jquery-1.11.1.min.js"></script> -->
-    <!-- Load KaTeX --> 
-    <!--
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.1.1/katex.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.1.1/katex.min.js"></script>
-    -->
-    <!-- mathjax -->
+    <!-- mathjax: from http://csega.github.io/mypost/2017/03/28/how-to-set-up-mathjax-on-jekyll-and-github-properly.html -->
     <script type="text/x-mathjax-config">
        MathJax.Hub.Config({
          tex2jax: {
@@ -74,14 +67,8 @@
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
-        <!-- {% if site.github.is_project_page %}
-        <p class="copyright">{{ site.title | default: site.github.repository_name }} maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a></p>
-        {% endif %}
-        -->
-        <p style="text-align: center">
-          <a href="{{ site.github.repository_url }}/blob/master/blogs{{ page.url | remove: ".html" }}.lhs" target="_blank">
-            literate haskell source
-          </a>
+       <p style="text-align: center">
+          <a href="{{ site.github.repository_url }}/blob/master/blogs{{ page.url | remove: ".html" }}.lhs" target="_blank">literate haskell source</a>
           <b>|<b>
           <a href="{{ site.url }}/{{ site.github.repository_name }}">All Blogs</a>
           <b>|<b>
@@ -90,24 +77,4 @@
       </footer>
     </div>
   </body>
- 
-  <!-- KaTeX
-  <script type="text/javascript">
-    $("script[type='math/tex']").replaceWith(
-      function(){
-        var tex = $(this).text();
-        return "<span class=\"inline-equation\">" + 
-               katex.renderToString(tex) +
-               "</span>";
-    });
-    
-    $("script[type='math/tex; mode=display']").replaceWith(
-      function(){
-        var tex = $(this).text();
-        return "<div class=\"equation\">" + 
-               katex.renderToString("\\displaystyle "+tex) +
-               "</div>";
-    });
-  </script>
-  -->
 </html>
