@@ -22,7 +22,7 @@ import Control.Arrow -- for >>>
 
 ``` haskell
 main :: IO ()
-main = interact $ _ 
+main = interact $ _
 ```
 
 There are also a few basic problems at the end of the above blog. I
@@ -76,7 +76,7 @@ using a `zipWith`
 
 ``` haskell
 -- f :: (a, b) -> c
--- f' :: a -> b -> c -- curried version of f 
+-- f' :: a -> b -> c -- curried version of f
 map f (zip xs ys) = zipWith f' xs ys
 ```
 
@@ -119,7 +119,7 @@ Next Problem
 Here's the first problem I'll be discussing: [Money
 Sums](https://cses.fi/problemset/task/1745/) from
 [cses.fi](https://cses.fi/). It is a very standard knapsack problem, but
-try to solve it using haskell. I'll post the solution next Friday which
-is 6th November, 2020.
+try to solve it using haskell. I'll post the solution next to next
+Friday which is 13th November, 2020.
 
 Feel free to discuss in the disqus comments at the end of this page.

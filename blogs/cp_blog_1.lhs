@@ -10,7 +10,7 @@ Introduction and our first problem
 
 Basic Setup
 -----------
-My basic setup is heavily inspired by [Brent Yorgey](https://byorgey.wordpress.com/). First have a look at [this blog](https://byorgey.wordpress.com/2019/04/24/competitive-programming-in-haskell-basic-setup/) for the basic template we'll be using.  
+My basic setup is heavily inspired by [Brent Yorgey](https://byorgey.wordpress.com/). First have a look at [this blog](https://byorgey.wordpress.com/2019/04/24/competitive-programming-in-haskell-basic-setup/) for the basic template we'll be using.
 
 \begin{code}
 import Control.Arrow -- for >>>
@@ -18,7 +18,7 @@ import Control.Arrow -- for >>>
 
 ```haskell
 main :: IO ()
-main = interact $ _ 
+main = interact $ _
 ```
 
 There are also a few basic problems at the end of the above blog. I recommend you first try to solve them before attempting the problem that I am presenting.
@@ -31,9 +31,9 @@ Warmup
 ------
 Let us solve an easy problem to get started.
 
-**[AtCoder: Resale](https://atcoder.jp/contests/abc125/tasks/abc125_b)**  
+**[AtCoder: Resale](https://atcoder.jp/contests/abc125/tasks/abc125_b)**
 
-This is the **B** problem from an AtCoder beginner contest. 
+This is the **B** problem from an AtCoder beginner contest.
 
 You have $$n$$ gems, with values $$V_i$$ and cost $$C_i$$. You want to pick some such that total value minus total cost is maximized. So you basically pick the ones which have $$V_i > C_i$$.
 
@@ -62,7 +62,7 @@ solve1 [vs, cs] = sum contribs
 Let us try to simplify this, by rewriting a `zip` followed by a `map` using a `zipWith`
 ```haskell
 -- f :: (a, b) -> c
--- f' :: a -> b -> c -- curried version of f 
+-- f' :: a -> b -> c -- curried version of f
 map f (zip xs ys) = zipWith f' xs ys
 ```
 
@@ -96,7 +96,7 @@ How slick is that!
 
 Next Problem
 ------------
-Here's the first problem I'll be discussing: [Money Sums](https://cses.fi/problemset/task/1745/) from [cses.fi](https://cses.fi/). It is a very standard knapsack problem, but try to solve it using haskell. I'll post the solution next Friday which is 6th November, 2020.  
+Here's the first problem I'll be discussing: [Money Sums](https://cses.fi/problemset/task/1745/) from [cses.fi](https://cses.fi/). It is a very standard knapsack problem, but try to solve it using haskell. I'll post the solution next to next Friday which is 13th November, 2020.
 
 Feel free to discuss in the disqus comments at the end of this page.
 

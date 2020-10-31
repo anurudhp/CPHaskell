@@ -4,10 +4,13 @@
 # `docs/` is rendered by GH-pages
 
 output_md_format=markdown
-blogs=`ls blogs/*.lhs`
+input_dir=blogs
+output_dir=docs
+
+blogs=`ls $input_dir/*.lhs`
 
 for blog in $blogs ; do
-  output=docs/`basename -s .lhs $blog`.md
+  output=$output_dir/`basename -s .lhs $blog`.md
 
   # log
   echo -n "Compiling $blog to $output... "
@@ -31,4 +34,7 @@ for blog in $blogs ; do
   echo "done."
 done
 
+echo -n "generating index... "
 cp blogs/index.md docs/index.md
+echo "done."
+
