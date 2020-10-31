@@ -1,17 +1,15 @@
 module Week8 where
 
-import Control.Monad (unless)
-import Data.Bifunctor (Bifunctor (first))
+import Control.Monad (unless, void)
+import Data.Bifunctor (Bifunctor(first))
 import Data.Char (isAlphaNum)
 import System.Exit (exitFailure)
 import System.IO (hPutStrLn, stderr)
 
 -- Exercise 1: A `Functor` instance
-
 -- Functor laws
 -- fmap id  ==  id
 -- fmap (f . g) == fmap f . fmap g
-
 data ComplicatedA a b
   = Con1 a b
   | Con2 [Maybe (a -> b)]
@@ -32,7 +30,8 @@ instance Functor g => Functor (ComplicatedB f g a) where
 
 -- Exercise 2: Rewriting monadic code
 func0 :: Monad f => (a -> a) -> f a -> f a
-func0 f xs = do f . f <$> xs
+func0 f xs = do
+  f . f <$> xs
 
 func0' :: Functor f => (a -> a) -> f a -> f a
 func0' f xs = f . f <$> xs
@@ -74,7 +73,12 @@ func6 xs = do
       else (0, x)
 
 func6' :: Functor f => f Integer -> f (Integer, Integer)
-func6' = fmap (\x -> if x > 0 then (x, 0) else (0, x))
+func6' =
+  fmap
+    (\x ->
+       if x > 0
+         then (x, 0)
+         else (0, x))
 
 func7 :: Monad f => f Integer -> f (Integer, Integer)
 func7 xs = do
@@ -90,7 +94,11 @@ func8' :: Applicative f => f Integer -> Integer -> f Integer
 func8' xs x = ((+) <$> xs) <*> pure x
 
 func9 :: Monad f => f Integer -> f Integer -> f Integer -> f Integer
-func9 xs ys zs = xs >>= \x -> if even x then ys else zs
+func9 xs ys zs =
+  xs >>= \x ->
+    if even x
+      then ys
+      else zs
 
 func10 :: Monad f => f Integer -> f Integer
 func10 xs = do
@@ -101,7 +109,8 @@ func10' :: Applicative f => f Integer -> f Integer
 func10' xs = (+ 10) . (\x -> x * x) <$> xs
 
 -- Exercise 3: A parser monad
-data Parser a = P (String -> Maybe (a, String))
+data Parser a =
+  P (String -> Maybe (a, String))
 
 runParser :: Parser a -> String -> Maybe (a, String)
 runParser (P p) = p
@@ -109,7 +118,9 @@ runParser (P p) = p
 parse :: Parser a -> String -> Maybe a
 parse p s = do
   (a, s') <- runParser p s
-  if not (null s') then Nothing else return a
+  if not (null s')
+    then Nothing
+    else return a
 
 noParser :: Parser a
 noParser = P (const Nothing)
@@ -124,25 +135,29 @@ instance Applicative Parser where
   pure = pureParser
   fp <*> fx =
     P
-      ( \s ->
-          case runParser fp s of
-            Nothing -> Nothing
-            Just (f, s') -> case runParser fx s' of
-              Nothing -> Nothing
-              Just (a, s'') -> Just (f a, s'')
-      )
+      (\s ->
+         case runParser fp s of
+           Nothing -> Nothing
+           Just (f, s') ->
+             case runParser fx s' of
+               Nothing -> Nothing
+               Just (a, s'') -> Just (f a, s''))
 
 instance Monad Parser where
   return = pureParser
   fa >>= k =
     P
-      ( \s -> case runParser fa s of
-          Nothing -> Nothing
-          Just (a, s') -> runParser (k a) s'
-      )
+      (\s ->
+         case runParser fa s of
+           Nothing -> Nothing
+           Just (a, s') -> runParser (k a) s')
 
 anyChar :: Parser Char
-anyChar = P (\s -> if null s then Nothing else Just (head s, tail s))
+anyChar =
+  P (\s ->
+       if null s
+         then Nothing
+         else Just (head s, tail s))
 
 char :: Char -> Parser ()
 char c = do
@@ -152,36 +167,31 @@ char c = do
 anyCharBut :: Char -> Parser Char
 anyCharBut c = do
   c' <- anyChar
-  if c /= c' then return c' else noParser
+  if c /= c'
+    then return c'
+    else noParser
 
 orElse :: Parser a -> Parser a -> Parser a
 orElse p q =
-  P
-    ( \s -> case runParser p s of
-        Nothing -> runParser q s
-        Just (a, s') -> Just (a, s')
-    )
+  P (\s ->
+       case runParser p s of
+         Nothing -> runParser q s
+         Just (a, s') -> Just (a, s'))
 
 many :: Parser a -> Parser [a]
 many p =
-  ( do
-      a <- p
+  (do a <- p
       as <- many p
-      return (a : as)
-  )
-    `orElse` pure []
+      return (a : as)) `orElse`
+  pure []
 
 sepBy :: Parser a -> Parser () -> Parser [a]
 sepBy pa ps =
-  ( do
-      a <- pa
-      ( do
-          ps
-          (a :) <$> sepBy pa ps
-        )
-        `orElse` return [a]
-  )
-    `orElse` return []
+  (do a <- pa
+      (do ps
+          (a :) <$> sepBy pa ps) `orElse`
+        return [a]) `orElse`
+  return []
 
 parseCSV :: Parser [[String]]
 parseCSV = many parseLine
@@ -205,7 +215,9 @@ type INIFile = [Section]
 letterOrDigit :: Parser Char
 letterOrDigit = do
   c <- anyChar
-  if isAlphaNum c then return c else noParser
+  if isAlphaNum c
+    then return c
+    else noParser
 
 many1 :: Parser a -> Parser [a]
 many1 p = do
@@ -214,7 +226,7 @@ many1 p = do
   return (a : as)
 
 skipCommentsAndEmptyLines :: Parser ()
-skipCommentsAndEmptyLines = many (skipEmptyLine `orElse` skipComment) >> return ()
+skipCommentsAndEmptyLines = void $ many (skipEmptyLine `orElse` skipComment)
 
 skipComment :: Parser ()
 skipComment = char '#' >> many (anyCharBut '\n') >> char '\n'
@@ -256,10 +268,11 @@ parseINI = many1 parseSection <* skipCommentsAndEmptyLines
 -- Testing Harness
 main :: [String] -> IO ()
 main args = do
-  input <- case args of
-    [] -> getContents
-    [fileName] -> readFile fileName
-    _ -> hPutStrLn stderr "Too many arguments given" >> exitFailure
+  input <-
+    case args of
+      [] -> getContents
+      [fileName] -> readFile fileName
+      _ -> hPutStrLn stderr "Too many arguments given" >> exitFailure
   case parse parseINI input of
     Just i -> print i
     Nothing -> do
