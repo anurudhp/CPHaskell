@@ -17,6 +17,7 @@ blog](https://byorgey.wordpress.com/2019/04/24/competitive-programming-in-haskel
 for the basic template we'll be using.
 
 ``` haskell
+{-# LANGUAGE ParallelListComp #-}
 import Control.Arrow -- for >>>
 ```
 
@@ -109,6 +110,9 @@ Finally, the shortest code I could write:
 
 ``` haskell
 solve [vs, cs] = sum . filter (> 0) $ zipWith (-) vs cs
+
+-- or, can use list comprehension
+solve' [vs, cs] = sum . filter (> 0) $ [ v - c | v <- vs | c <- cs ]
 ```
 
 How slick is that!

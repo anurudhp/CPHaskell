@@ -13,6 +13,7 @@ Basic Setup
 My basic setup is heavily inspired by [Brent Yorgey](https://byorgey.wordpress.com/). First have a look at [this blog](https://byorgey.wordpress.com/2019/04/24/competitive-programming-in-haskell-basic-setup/) for the basic template we'll be using.
 
 \begin{code}
+{-# LANGUAGE ParallelListComp #-}
 import Control.Arrow -- for >>>
 \end{code}
 
@@ -91,6 +92,9 @@ solve4 [vs, cs] = sum contribs
 Finally, the shortest code I could write:
 \begin{code}
 solve [vs, cs] = sum . filter (> 0) $ zipWith (-) vs cs
+
+-- or, can use list comprehension
+solve' [vs, cs] = sum . filter (> 0) $ [ v - c | v <- vs | c <- cs ]
 \end{code}
 How slick is that!
 
