@@ -26,6 +26,8 @@ cabal.project.local~
 # CP
 *.in
 *.out
+*.ans
+*.scratch
 
 # misc
 .tmp/
