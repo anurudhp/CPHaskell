@@ -9,12 +9,16 @@
     
     <!-- mathjax: from http://csega.github.io/mypost/2017/03/28/how-to-set-up-mathjax-on-jekyll-and-github-properly.html -->
     <script type="text/x-mathjax-config">
-       MathJax.Hub.Config({
-         tex2jax: {
-           inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-           processEscapes: true
-         }
-       });
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
      </script>
      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
   </head>
