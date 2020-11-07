@@ -19,7 +19,7 @@ for blog in $blogs ; do
   echo -n "" > $output
 
   # append YAML metadata (which is dropped by pandoc)
-  runhaskell scripts/getYAMLMetadata.hs $blogs >> $output
+  runhaskell scripts/getYAMLMetadata.hs $blog >> $output
   echo "" >> $output
 
   # convert

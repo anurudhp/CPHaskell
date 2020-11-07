@@ -6,7 +6,7 @@ main = getArgs >>= parse >>= putStr
 
 parse ["-h"] = usage >> exitSuccess
 parse [fname] = unlines . extract . lines <$> readFile fname
-parse _ = die "invalid usage"
+parse _ = die "getYAMLMetadata: invalid usage"
 
 usage =
   putStrLn $
