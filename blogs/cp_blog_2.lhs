@@ -19,12 +19,12 @@ First, let us solve the problem the usual way. We formulate a recurrence which w
 Let $P(i, s)$ be $1$ if it is possible to form a total of $s$ using the first $i$ coins. i.e. $x_1, x_2 \ldots x_i$.
 We start with the base state - with no coins -
 
-\[
+$$
 \begin{align*}
-P(0, s) & = 1 & s = 0
+P(0, s) & = 1 & s = 0 \\
  & = 2 & s = 1
 \end{align*}
-\]
+$$
 
 Implementation
 --------------
