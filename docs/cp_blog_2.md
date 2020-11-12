@@ -23,18 +23,22 @@ which we solve using Dynamic Programming.
 Let $P(i, s)$ be $1$ if it is possible to form a total of $s$ using the
 first $i$ coins. i.e. $x_1, x_2 \ldots x_i$. We start with the base
 state - with no coins - $$
+\begin{align*}
 P(0, s) \equiv
 \begin{cases}
 \texttt{true} & s = 0 \\
 \texttt{false} & s > 0 \\
+\end{align*}
 $$
 
 And here is the recurrence for using the first $i$ coins. $$
+\begin{align*}
 P(i, s) \equiv
 \begin{cases}
 \texttt{true} & s = 0 \\
 \texttt{false} & 0 < s < x_i \\
 P(i - 1, s - x_i) \lor P(i-1, s) & s \geq x_i
+\end{align*}
 $$
 
 For simplicity, let us define another family of sequences - $D$.
@@ -115,7 +119,7 @@ ghci> take 8 (zip [0..] dp2)
 ### Final solution
 
 Finally just apply the updates sequentially on the initial DP state:
-$D_0 = \{True, False, False, \ldots\}$.
+$$D_0 = \{True, False, False, \ldots\}$$.
 
 ``` haskell
 solve :: [Int] -> [Int]
