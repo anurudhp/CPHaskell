@@ -21,20 +21,20 @@ We start with the base state - with no coins -
 
 $$
 \begin{align*}
-P(0, 0) & = 1 \\
-P(0, s) & = 0 & s \ne 0
+P(0, 0) & = 1 & s = 0 & \\
+        & = 0 & s \ne 0 &
 \end{align*}
 $$
 
-Here, we consider $P(i, s)$ to be a boolean value, with $\cdot$ meaning \texttt{and} and $+$ meaning \texttt{or}.
+Here we consider $P(i, s)$ to be a boolean value, with $\cdot$ meaning `and` and $+$ meaning `or`.
 
 So, we get:
 
 $$
 \begin{align*}
-P(i, s) & = 1 & s = 0 \\
-        & = 0 & s < x_i \\
-        & = P(i - 1, s - x_i) + P(i - 1, s) & s >= x_i
+P(i, s) & = 1 & s = 0 & \\
+        & = 0 & 0 < s < x_i & \\
+        & = P(i - 1, s - x_i) + P(i - 1, s) & s \ge x_i &
 \end{align*}
 $$
 
