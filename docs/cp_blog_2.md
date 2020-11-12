@@ -87,7 +87,7 @@ Finally just apply the updates sequentially on the initial DP state:
 `[True, False, False...]`.
 
 ``` haskell
-solve :: [Int] → [Int]
+solve :: [Int] -> [Int]
 solve xs = dpIxsTrue
   where
     -- compute the full final DP
@@ -95,7 +95,7 @@ solve xs = dpIxsTrue
     -- drop everything after sum, as they are all False
     dpTillSum = take (sum xs + 1) dp
     -- pair with indices
-    dpWithIxs = [(i, p) | i ← [0..] | p ← dpTillSum]
+    dpWithIxs = [(i, p) | i <- [0..] | p <- dpTillSum]
     -- only take the True ones
-    dpIxsTrue = [ i | (i, p) ← dpWithIxs, p == True]
+    dpIxsTrue = [ i | (i, p) <- dpWithIxs, p == True]
 ```
