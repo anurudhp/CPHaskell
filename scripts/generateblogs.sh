@@ -29,7 +29,8 @@ for blog in $blogs ; do
   sed -i "s/sourceCode literate haskell/haskell/g" $output
   sed -i 's#{.sourceCode .literate .haskell}#haskell#g' $output
   sed -i 's#{.haskell}#haskell#g' $output
-  
+  sed -i 's/^\\#\\#\\#/###/g' $output
+
   # log
   echo "done."
 done

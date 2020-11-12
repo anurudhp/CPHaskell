@@ -59,7 +59,8 @@ main = interact $
     showWithLength xs = unlines [show $ length xs, unwords xs]
 \end{code}
 
-**Language Extension: `ParallelListComp`**
+ ### Language Extension: `ParallelListComp`
+
 I will write my solutions here using some syntactic sugar for zip. This just makes it easier to read.
 
 Here is an example.
@@ -69,11 +70,14 @@ zipAdd' xs ys = [ x + y | x <- xs | y <- ys ]
 \end{code}
 You can add mutiple lists, separated by a pipe symbol. This is equivalent to zipping all of them, with the expression at the start.
 
-**Transition**
+ ### Transition
 
 We want a function that computes $D_i$ from $D_{i - 1}$, by adding $x_i$ to the set. Let us call $D_{i - 1}$ as `dp`, and the new value $D_i$ as `dp'`. This implies that `dp' = next dp x`.
 
-To compute `dp' !! i`, we need `dp !! i` and `dp !! (i - x)`. Define `dpx !! i = dp !! (i - x)` by just prepending `False` `x` times to `dp`. Now we get `dp' !! i = dp !! i || dpx !! i`. This is computed by directly zipping them with `||`.
+To compute `dp'[i]`, we need `dp[i]` and `dp[i - x]`. Define `dpx[i] = dp[i - x]` by just prepending `False` `x` times to `dp`.
+
+Now we get `dp'[i] = dp[i] || dpx[i]`. This is computed by directly zipping them with `||`.
+
 \begin{code}
 next :: [Bool] -> Int -> [Bool]
 next dp x = [ p || p' | p <- dp | p' <- dpx ]
@@ -93,6 +97,8 @@ ghci> take 8 (zip [0..] dp2)
 [(0,True),(1,False),(2,False),(3,True),(4,True),(5,False),(6,False),(7,True)]
 ```
 
+ ### Final solution
+
 Finally just apply the updates sequentially on the initial DP state: $D_0 = \{True, False, False, \ldots\}$.
 \begin{code}
 solve :: [Int] -> [Int]
@@ -110,7 +116,7 @@ solve xs = dpIxsTrue
 
 A very nice use of laziness. We just took the mathematical definition of the DP, and let it run till infinity. This also gives us a clean implementation, which is intuitive to understand.
 
-Here is a link to my [submission](https://github.com/anurudhp/CPHaskell/blob/master/contests/cses/1745.hs). I have written two variants for solve there, one same as above, and one without using infinite lists.
+Here is a link to my final [submission](https://github.com/anurudhp/CPHaskell/blob/master/contests/cses/1745.hs). I have written two variants for solve there, one same as above, and one without using infinite lists.
 
 Next Problem
 ------------
