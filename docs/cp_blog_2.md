@@ -5,8 +5,8 @@ created: 13/11/2020
 index: 2
 ---
 
-\[WIP\] Knapsack DP reinvented
-==============================
+Knapsack DP reinvented
+======================
 
 Here is the problem [Money Sums](https://cses.fi/problemset/task/1745/)
 that I shared in my [last blog](cp_blog_1.html)
@@ -74,14 +74,17 @@ by adding $x_i$ to the set.
 update :: [Bool] -> Int -> [Bool]
 update dp x = [ p || p' | p <- dp | p' <- dp' ]
   where
-    -- shift by x.
+    -- shift by x to get the updating list: dp'
+    -- and then combine it with the old state.
     -- dp'[i] = dp[i - x] ; i >= x
     --        = False i < x
     dp' = replicate x False ++ dp
 ```
 
 You can try running this with a some samples by firing up `gchi`. Load
-this file and call the update function.
+this file and call the update function. Remember that `dp` is an
+infinite list. You can use `take <n>` to see the first `n` elements of
+it.
 
 Finally just apply the updates sequentially on the initial DP state:
 `[True, False, False...]`.
@@ -92,10 +95,22 @@ solve xs = dpIxsTrue
   where
     -- compute the full final DP
     dp = foldl update (True : repeat False) xs
-    -- drop everything after sum, as they are all False
-    dpTillSum = take (sum xs + 1) dp
-    -- pair with indices
-    dpWithIxs = [(i, p) | i <- [0..] | p <- dpTillSum]
-    -- only take the True ones
-    dpIxsTrue = [ i | (i, p) <- dpWithIxs, p == True]
+    -- pair with indices, upto the total
+    dpWithIxs = [(i, p) | i <- [0..sum xs] | p <- dp]
+    -- only take the True ones, excluding 0
+    dpIxsTrue = [ i | (i, p) <- dpWithIxs, p == True, i > 0]
 ```
+
+A very nice use of laziness. We just took the mathematical definition of
+the DP, and let it run till infinity. This also gives us a clean
+implementation, which is intuitive to understand.
+
+Here is a link to my
+[submission](https://github.com/anurudhp/CPHaskell/blob/master/contests/cses/1745.hs).
+I have written two variants for solve there, one same as above, and one
+without using infinite lists.
+
+Next Problem
+------------
+
+TBA
