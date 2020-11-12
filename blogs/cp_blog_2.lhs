@@ -43,6 +43,8 @@ Implementation
 
 Let us start with the basic outline:
 \begin{code}
+{-# LANGUAGE ParallelListComp #-}
+{-# LANGUAGE UnicodeSyntax #-}
 import Control.Arrow ((>>>))
 
 main :: IO ()
@@ -55,8 +57,35 @@ main = interact $
     >>> showWithLength -- show length and then the list
   where
     showWithLength xs = unlines [show $ length xs, unwords xs]
+\end{code}
 
-solve :: [Int] -> [Int]
-solve = error "not implemented"
+**DP Updates**
+The first thing we want to write is a simple DP update, on adding one element. That is the transition from $P(i - 1)$ to $P(i)$ by adding $x_i$ to the set.
+
+\begin{code}
+update :: [Bool] -> Int -> [Bool]
+update dp x = [ p || p' | p <- dp | p' <- dp' ]
+  where
+    -- shift by x.
+    -- dp'[i] = dp[i - x] ; i >= x
+    --        = False i < x
+    dp' = replicate x False ++ dp
+\end{code}
+
+You can try running this with a some samples by firing up `gchi`. Load this file and call the update function.
+
+Finally just apply the updates sequentially on the initial DP state: `[True, False, False...]`.
+\begin{code}
+solve :: [Int] → [Int]
+solve xs = dpIxsTrue
+  where
+    -- compute the full final DP
+    dp = foldl update (True : repeat False) xs
+    -- drop everything after sum, as they are all False
+    dpTillSum = take (sum xs + 1) dp
+    -- pair with indices
+    dpWithIxs = [(i, p) | i ← [0..] | p ← dpTillSum]
+    -- only take the True ones
+    dpIxsTrue = [ i | (i, p) ← dpWithIxs, p == True]
 \end{code}
 
