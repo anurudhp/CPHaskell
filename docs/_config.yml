@@ -1,4 +1,4 @@
-theme: jekyll-theme-slate
+#theme: jekyll-theme-slate
 markdown: kramdown
 kramdown:
    math_engine: mathjax
