@@ -1,5 +1,5 @@
 ---
-layout: blogs
+layout: blog
 title: Knapsack DP reinvented
 created: 13/11/2020
 index: 2

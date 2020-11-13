@@ -1,5 +1,5 @@
 ---
-layout: blogs
+layout: blog
 title: Introduction and our first problem
 created: 30/10/2020
 index: 1
