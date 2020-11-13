@@ -124,4 +124,6 @@ Here is a link to my final [submission](https://github.com/anurudhp/CPHaskell/bl
 
 Next Problem
 ------------
-TBA
+In the next blog I will discuss these two easy problems: [CSES: Repetitions](https://cses.fi/problemset/task/1069) and [AtCoder: GCD On Blackboard](https://atcoder.jp/contests/abc125/tasks/abc125_c).
+
+Have fun Haskelling!
