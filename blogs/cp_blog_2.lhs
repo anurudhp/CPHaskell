@@ -19,6 +19,7 @@ First, let us solve the problem the usual way. We formulate a recurrence which w
 Let $P(i, s)$ be $1$ if it is possible to form a total of $s$ using the first $i$ coins. i.e. $x_1, x_2 \ldots x_i$.
 
 We start with the base state - with no coins -
+
 $$
 P(0, s) \equiv
 \begin{cases}
@@ -28,6 +29,7 @@ P(0, s) \equiv
 $$
 
 And this is the recurrence for using the first $i$ coins.
+
 $$
 P(i, s) \equiv
 \begin{cases}
@@ -75,11 +77,11 @@ You can add mutiple lists, separated by a pipe symbol. This is equivalent to zip
 
  ### Transition
 
-We want a function that computes $D_i$ from $D_{i - 1}$, by adding $x_i$ to the set. Let us call $D_{i - 1}$ as `dp`, and the new value $D_i$ as `dp'`. This implies that `dp' = next dp x`.
+We want a function that computes $D_i$ from $D_{i - 1}$, by adding $x_i$ to the set. Let us call $D_{i - 1}$ as `dp`, and the new value $D_i$ as `dp'`.
 
-To compute `dp'[i]`, we need `dp[i]` and `dp[i - x]`. Define `dpx[i] = dp[i - x]` by just prepending `False` `x` times to `dp`.
+To compute `dp'[s]`, recall the recurrence we defined. We need `dp[s]` and `dp[s - x]`. Define `dpx[s] = dp[s - x]` by just prepending `False` `x` times to `dp`.
 
-Now we get `dp'[i] = dp[i] || dpx[i]`. This is computed by directly zipping them with `||`.
+Now we get `dp'[s] = dp[s] || dpx[s]`. This is computed by directly zipping them with `||`.
 
 \begin{code}
 next :: [Bool] -> Int -> [Bool]
@@ -87,6 +89,8 @@ next dp x = [ p || p' | p <- dp | p' <- dpx ]
   where
     dpx = replicate x False ++ dp
 \end{code}
+
+This implies that `dp' = next dp x`.
 
 You can try running this with a some samples by firing up `gchi`. Load this file and call the `next` function. Remember that `dp` is an infinite list. You can use `take n` to see the first `n` elements of it.
 
@@ -102,7 +106,7 @@ ghci> take 8 (zip [0..] dp2)
 
  ### Final solution
 
-Finally just apply the updates sequentially on the initial DP state: $$D_0 = \{True, False, False, \ldots\}$$.
+Finally just apply the updates sequentially on the initial DP state: $$D_0 \equiv \{\texttt{true}, \texttt{false}, \texttt{false}, \ldots\}$$.
 
 \begin{code}
 solve :: [Int] -> [Int]
@@ -126,4 +130,8 @@ Next Problem
 ------------
 In the next blog I will discuss these two easy problems: [CSES: Repetitions](https://cses.fi/problemset/task/1069) and [AtCoder: GCD On Blackboard](https://atcoder.jp/contests/abc125/tasks/abc125_c).
 
-Have fun Haskelling!
+Happy Haskelling!
+
+Acknowledgements
+----------------
+I am incredibly grateful to [Siddharth Bhat](http://github.com/bollu/) for his invaluable feedback.

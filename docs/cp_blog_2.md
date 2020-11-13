@@ -23,7 +23,9 @@ which we solve using Dynamic Programming.
 Let $P(i, s)$ be $1$ if it is possible to form a total of $s$ using the
 first $i$ coins. i.e. $x_1, x_2 \ldots x_i$.
 
-We start with the base state - with no coins - $$
+We start with the base state - with no coins -
+
+$$
 P(0, s) \equiv
 \begin{cases}
 \texttt{true} & s = 0 \\
@@ -31,7 +33,9 @@ P(0, s) \equiv
 \end{cases}
 $$
 
-And this is the recurrence for using the first $i$ coins. $$
+And this is the recurrence for using the first $i$ coins.
+
+$$
 P(i, s) \equiv
 \begin{cases}
 \texttt{true} & s = 0 \\
@@ -86,12 +90,13 @@ equivalent to zipping all of them, with the expression at the start.
 
 We want a function that computes $D_i$ from $D_{i - 1}$, by adding $x_i$
 to the set. Let us call $D_{i - 1}$ as `dp`, and the new value $D_i$ as
-`dp'`. This implies that `dp' = next dp x`.
+`dp'`.
 
-To compute `dp'[i]`, we need `dp[i]` and `dp[i - x]`. Define
-`dpx[i] = dp[i - x]` by just prepending `False` `x` times to `dp`.
+To compute `dp'[s]`, recall the recurrence we defined. We need `dp[s]`
+and `dp[s - x]`. Define `dpx[s] = dp[s - x]` by just prepending `False`
+`x` times to `dp`.
 
-Now we get `dp'[i] = dp[i] || dpx[i]`. This is computed by directly
+Now we get `dp'[s] = dp[s] || dpx[s]`. This is computed by directly
 zipping them with `||`.
 
 ``` haskell
@@ -100,6 +105,8 @@ next dp x = [ p || p' | p <- dp | p' <- dpx ]
   where
     dpx = replicate x False ++ dp
 ```
+
+This implies that `dp' = next dp x`.
 
 You can try running this with a some samples by firing up `gchi`. Load
 this file and call the `next` function. Remember that `dp` is an
@@ -118,7 +125,7 @@ ghci> take 8 (zip [0..] dp2)
 ### Final solution
 
 Finally just apply the updates sequentially on the initial DP state:
-$$D_0 = \{True, False, False, \ldots\}$$.
+$$D_0 \equiv \{\texttt{true}, \texttt{false}, \texttt{false}, \ldots\}$$.
 
 ``` haskell
 solve :: [Int] -> [Int]
@@ -150,4 +157,10 @@ In the next blog I will discuss these two easy problems: [CSES:
 Repetitions](https://cses.fi/problemset/task/1069) and [AtCoder: GCD On
 Blackboard](https://atcoder.jp/contests/abc125/tasks/abc125_c).
 
-Have fun Haskelling!
+Happy Haskelling!
+
+Acknowledgements
+----------------
+
+I am incredibly grateful to [Siddharth Bhat](http://github.com/bollu/)
+for his invaluable feedback.
