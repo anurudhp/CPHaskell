@@ -1,4 +1,4 @@
--- https://cses.fi/problemset/task/1745/
+-- PROBLEM https://cses.fi/problemset/task/1745/
 import Control.Arrow ((>>>))
 
 main :: IO ()

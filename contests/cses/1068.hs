@@ -1,5 +1,5 @@
--- PROBLEM: https://cses.fi/problemset/task/1068/
--- NAME: Weird Algorithm
+-- PROBLEM https://cses.fi/problemset/task/1068/
+-- NAME Weird Algorithm
 {-# LANGUAGE Safe #-}
 
 import safe Control.Arrow ((>>>))
