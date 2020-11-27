@@ -39,6 +39,9 @@ solveA :: String -> Int
 solveA = maximum . map length . group
 ```
 
+And finally just a simple main function. Take the first line as a string
+and pass it to solve.
+
 ``` haskell
 mainA :: IO ()
 mainA = interact $ lines >>> head >>> solveA >>> show

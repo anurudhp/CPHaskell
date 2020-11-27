@@ -33,6 +33,7 @@ solveA :: String -> Int
 solveA = maximum . map length . group
 \end{code}
 
+And finally just a simple main function. Take the first line as a string and pass it to solve.
 \begin{code}
 mainA :: IO ()
 mainA = interact $ lines >>> head >>> solveA >>> show
