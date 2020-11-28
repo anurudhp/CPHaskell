@@ -11,10 +11,8 @@ Language Extensions
 
 ### Used
 1. `Safe`
-
-### Experimental
 1. `ViewPatterns`
-2. `ParallelListComp`
+1. `ParallelListComp`
 
 Resources
 =========
