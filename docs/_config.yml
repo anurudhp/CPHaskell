@@ -1,6 +1,0 @@
-theme: jekyll-theme-primer
-markdown: kramdown
-kramdown:
-   math_engine: mathjax
-title: "CPHaskell"
-description: "Anurudh's Blog on Haskell in Competitive Programming"
