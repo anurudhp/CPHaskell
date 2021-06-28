@@ -1,0 +1,26 @@
+import Control.Applicative (liftA2)
+import Control.Arrow ((>>>))
+import qualified Data.ByteString.Lazy.Char8 as C
+import Data.Maybe (fromMaybe)
+
+chunksOf :: Int -> [a] -> [[a]]
+chunksOf _ [] = []
+chunksOf k xs =
+  let (hs, ts) = splitAt k xs
+   in hs : chunksOf k ts
+
+main :: IO ()
+main =
+  interact $
+  lines >>>
+  drop 1 >>>
+  chunksOf 2 >>>
+  map (last >>> words >>> map read >>> solve >>> show) >>> unlines
+
+solve :: [Int] -> Int
+solve xs
+  | tot `mod` n /= 0 = -1
+  | otherwise = length $ filter (> tot `div` n) xs
+  where
+    n = length xs
+    tot = sum xs
