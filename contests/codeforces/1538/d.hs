@@ -2,12 +2,9 @@ import Control.Arrow ((>>>))
 import Data.Bool (bool)
 
 main :: IO ()
-main =
-  interact $
-  lines >>>
-  drop 1 >>> map (words >>> map read >>> solve >>> bool "No" "Yes") >>> unlines
-
-type I64 = Integer
+main = interact $ lines >>> drop 1
+         >>> map (words >>> map read >>> solve >>> bool "No" "Yes")
+         >>> unlines
 
 solve :: [Int] -> Bool
 solve [a, b, k]
@@ -22,9 +19,8 @@ primes = sieve [2 .. 4 * 10 ^ 4]
     sieve (p:xs) = p : sieve (filter ((/= 0) . (`mod` p)) xs)
 
 fac :: Int -> Int
-fac n =
-  (\(v, acc) -> acc + bool 1 0 (v == 1)) $
-  foldl (\(v, acc) p -> f v p acc) (n, 0) primes
+fac n = (\(v, acc) -> acc + bool 1 0 (v == 1))
+          $ foldl (\(v, acc) p -> f v p acc) (n, 0) primes
   where
     f v p acc
       | v `mod` p /= 0 = (v, acc)
