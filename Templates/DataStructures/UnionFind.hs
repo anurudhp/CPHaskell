@@ -1,6 +1,7 @@
 {-# LANGUAGE Rank2Types #-}
 module UnionFind where
 
+import Control.Monad
 import Control.Monad.ST
 import Data.Array.ST
 import Data.Array.Unboxed
@@ -22,18 +23,19 @@ find u dsu@(DSU par _) = do
 
 merge :: Int -> Int -> DSU s -> ST s Bool
 merge u v dsu@(DSU par sz) = do
-  pu <- find u dsu
-  pv <- find v dsu
-  if pu == pv
-     then return False
-     else do
-       su <- readArray sz pu -- su = sz[pu]
-       sv <- readArray sz pv -- sv = sz[pv]
-       let s = su + sv
-       let (p, w) = if su > sv then (pu, pv) else (pv, pu)
-       writeArray par w p -- par[w] = p
-       writeArray sz p s -- sz[p] = s
-       return True
+  u <- find u dsu
+  v <- find v dsu
+  when (u /= v) $ do
+    su <- readArray sz u -- su = sz[pu]
+    sv <- readArray sz v -- sv = sz[pv]
+    let s = su + sv
+    let (u, v) = if su > sv then (u, v) else (v, u)
+    writeArray par v u -- par[v] = u
+    writeArray sz u s -- sz[u] = s
+  return $ u /= v
+
+same :: Int -> Int -> DSU s -> ST s Bool
+same u v dsu = (==) <$> find u dsu <*> find v dsu
 
 -- finalized
 data DSUF = DSUF {parent :: UArray Int Int, size :: UArray Int Int}
