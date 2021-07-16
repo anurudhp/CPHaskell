@@ -32,3 +32,4 @@ cabal.project.local~
 # misc
 .tmp/
 .vscode
+contest/
