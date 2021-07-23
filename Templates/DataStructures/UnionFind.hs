@@ -29,7 +29,7 @@ merge u v dsu@(DSU par sz) = do
     su <- readArray sz u -- su = sz[pu]
     sv <- readArray sz v -- sv = sz[pv]
     let s = su + sv
-    let (u, v) = if su > sv then (u, v) else (v, u)
+    (u, v) <- pure $ if su > sv then (u, v) else (v, u)
     writeArray par v u -- par[v] = u
     writeArray sz u s -- sz[u] = s
   return $ u /= v
