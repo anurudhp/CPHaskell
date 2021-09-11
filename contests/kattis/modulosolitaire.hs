@@ -12,6 +12,7 @@ import Data.Array.Unboxed
 import qualified Data.ByteString.Lazy.Char8 as C
 import Data.Maybe (fromJust)
 import Data.STRef.Strict
+import Debug.Trace (trace)
 
 main :: IO ()
 main = C.interact $ runScanner input >>> solve >>> showB
@@ -26,28 +27,34 @@ input = do
   (m,,) <$> int <*> n >< pair int int
 
 solve :: Input -> Int
-solve (m, s, ts) = runST $ do
-  q <- newArray (0, m - 1) 0 :: ST s (STUArray s Int Int)
-  dis <- newArray (0, m - 1) (-1) :: ST s (STUArray s Int Int)
+solve (m, s, ts) = bfs (0, m - 1) adj s ! 0
+  where
+    adj :: Int -> [Int]
+    adj x = [(a * x + b) `mod` m | (a, b) <- ts]
+
+-- bfs :: bounds -> adj function -> source -> distances
+bfs :: (Int, Int) -> (Int -> [Int]) -> Int -> UArray Int Int
+bfs vixs adj s = runST $ do
+  q <- newArray vixs 0 :: ST s (STUArray s Int Int)
+  dis <- newArray vixs (-1) :: ST s (STUArray s Int Int)
   tref <- newSTRef 0
 
   writeArray q 0 s
   writeArray dis s 0
 
-  forM_ [0 .. m -1] $ \h -> do
+  forM_ (range vixs) $ \h -> do
     t <- readSTRef tref
     when (h <= t) $ do
       u <- readArray q h
       d <- readArray dis u
-      forM_ ts $ \(a, b) -> do
-        let v = (u * a + b) `mod` m
+      forM_ (adj u) $ \v -> do
         d' <- readArray dis v
         when (d' == -1) $ do
           writeArray dis v (d + 1)
           modifySTRef' tref (+ 1)
           t <- readSTRef tref
           writeArray q t v
-  readArray dis 0
+  freeze dis
 
 -------------------------- Template ------------------------------------------
 type Scanner = State [C.ByteString]
