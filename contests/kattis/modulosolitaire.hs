@@ -1,6 +1,6 @@
 {-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE Strict #-}
-{-# LANGUAGE TupleSections #-}
 
 import Control.Applicative (liftA2)
 import Control.Arrow ((>>>))
@@ -18,16 +18,16 @@ main :: IO ()
 main = C.interact $ runScanner input >>> solve >>> showB
 
 type PII = (Int, Int)
-type Input = (Int, Int, [PII])
+data TC = TC {m :: Int, s :: Int, ts :: [PII]}
 
-input :: Scanner Input
+input :: Scanner TC
 input = do
   m <- int
   n <- int
-  (m,,) <$> int <*> n >< pair int int
+  TC m <$> int <*> n >< pair int int
 
-solve :: Input -> Int
-solve (m, s, ts) = bfs (0, m - 1) adj s ! 0
+solve :: TC -> Int
+solve TC{..} = bfs (0, m - 1) adj s ! 0
   where
     adj :: Int -> [Int]
     adj x = [(a * x + b) `mod` m | (a, b) <- ts]
