@@ -1,4 +1,3 @@
-{-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE Strict #-}
 {-# LANGUAGE TupleSections #-}
@@ -18,36 +17,35 @@ main :: IO ()
 main = C.interact $ runScanner input >>> solve >>> showB
 
 type PII = (Int, Int)
-
 type Input = (Int, Int, [PII])
 
 input :: Scanner Input
 input = do
-  !m <- int
-  !n <- int
+  m <- int
+  n <- int
   (m,,) <$> int <*> n >< pair int int
 
 solve :: Input -> Int
-solve (!m, !s, !ts) = runST $ do
-  !q <- newArray (0, m - 1) 0 :: ST s (STUArray s Int Int)
-  !dis <- newArray (0, m - 1) (-1) :: ST s (STUArray s Int Int)
-  !tref <- newSTRef 0
+solve (m, s, ts) = runST $ do
+  q <- newArray (0, m - 1) 0 :: ST s (STUArray s Int Int)
+  dis <- newArray (0, m - 1) (-1) :: ST s (STUArray s Int Int)
+  tref <- newSTRef 0
 
   writeArray q 0 s
   writeArray dis s 0
 
   forM_ [0 .. m -1] $ \h -> do
-    !t <- readSTRef tref
+    t <- readSTRef tref
     when (h <= t) $ do
-      !u <- readArray q h
-      !d <- readArray dis u
+      u <- readArray q h
+      d <- readArray dis u
       forM_ ts $ \(a, b) -> do
         let v = (u * a + b) `mod` m
-        !d' <- readArray dis v
+        d' <- readArray dis v
         when (d' == -1) $ do
           writeArray dis v (d + 1)
           modifySTRef' tref (+ 1)
-          !t <- readSTRef tref
+          t <- readSTRef tref
           writeArray q t v
   readArray dis 0
 
